@@ -1,0 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+:root {
+  --background: #fef8f4;
+  --card: #ffffff;
+  --card-alt: #fcf7f3;
+  --surface: #f9f2ef;
+  --surface-raised: #f3ede9;
+  --text: #1d1b19;
+  --muted: #716b66;
+  --border: #e7e1de;
+  --primary: #005c55;
+  --primary-soft: #e2f4f0;
+  --destructive: #b42318;
+  --accent: #ac3400;
+  --theme-terracotta: #c5644d;
+  --theme-ochre: #c18b35;
+  --theme-sage: #64795b;
+  --theme-sky: #5a8192;
+  --theme-plum: #82648e;
+  --theme-rose: #bf5661;
+  --radius-card: 8px;
+  --radius-input: 6px;
+  --sidebar-width: 252px;
+  --topbar-height: 48px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-card: var(--card);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-destructive: var(--destructive);
+  --font-sans: "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
+  --font-serif: "Newsreader", Georgia, serif;
+}
+
+html {
+  background: var(--background);
+  color: var(--text);
+}
+
+body {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--text);
+  font-family: "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Newsreader", Georgia, serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(0, 92, 85, 0.16);
+}
