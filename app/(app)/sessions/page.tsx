@@ -21,7 +21,6 @@ type Session = {
   date: string;
   time: string;
   title: string;
-  facilitator: string;
   guests: number;
   theme: string;
   venue: string;
@@ -38,7 +37,6 @@ const sessions: Session[] = [
     date: "Mar 14, 2025",
     time: "6:30 PM EST",
     title: "Workplace Boundaries & Quiet Quitting",
-    facilitator: "Dr. Aris Vance",
     guests: 3,
     theme: "Career & Purpose",
     venue: "Downtown Community Center",
@@ -51,7 +49,6 @@ const sessions: Session[] = [
     date: "Mar 28, 2025",
     time: "6:30 PM EST",
     title: "Loneliness in the Hyper-Connected Age",
-    facilitator: "Maya Lin-Torres",
     guests: 4,
     theme: "Relationships",
     venue: "The Loft Studio",
@@ -64,7 +61,6 @@ const sessions: Session[] = [
     date: "Apr 11, 2025",
     time: "7:00 PM EST",
     title: "Art in the Age of Generative Algorithms",
-    facilitator: "Kenji Sato",
     guests: 2,
     theme: "Creative Life",
     venue: "Eastside Innovation Lab",
@@ -77,7 +73,6 @@ const sessions: Session[] = [
     date: "Apr 25, 2025",
     time: "6:30 PM EST",
     title: "Navigating Chronic Uncertainty",
-    facilitator: "Elena Rostova",
     guests: 3,
     theme: "Mental Well-being",
     venue: "The Loft Studio",
@@ -90,7 +85,6 @@ const sessions: Session[] = [
     date: "May 09, 2025",
     time: "6:30 PM EST",
     title: "Rebuilding Civic Duty Beyond Elections",
-    facilitator: "Dr. Noel Rahman",
     guests: 3,
     theme: "Civic Engagement",
     venue: "Civic Hall Room 204",
@@ -103,7 +97,6 @@ const sessions: Session[] = [
     date: "Feb 28, 2025",
     time: "6:30 PM EST",
     title: "Finding Meaning in the In-Between",
-    facilitator: "Sonia Lin",
     guests: 3,
     theme: "Relationships",
     venue: "Downtown Community Center",
@@ -116,7 +109,6 @@ const sessions: Session[] = [
     date: "May 23, 2025",
     time: "6:30 PM EST",
     title: "The Future of Third Places",
-    facilitator: "Unassigned",
     guests: 0,
     theme: "Civic Engagement",
     venue: "Venue not selected",
@@ -151,7 +143,7 @@ export default function SessionsPage() {
     () =>
       sessions.filter((session) => {
         const matchesTab = session.tab === activeTab;
-        const matchesQuery = `${session.title} ${session.facilitator} ${session.venue}`
+        const matchesQuery = `${session.title} ${session.venue}`
           .toLowerCase()
           .includes(query.toLowerCase());
         const matchesTheme = themeFilter === "All Themes" || session.theme === themeFilter;
@@ -313,7 +305,7 @@ export default function SessionsPage() {
                     {session.title}
                   </Link>
                   <div className="mt-1 truncate text-[8px] text-[#857c74]">
-                    Lead Facilitator: {session.facilitator} <span className="px-0.5">•</span> {session.guests} panel guests
+                    {session.guests} panel guests
                   </div>
                 </div>
                 <span className="w-fit max-w-full truncate rounded-full px-2 py-1 text-[8px] font-semibold" style={{ backgroundColor: `${themeColors[session.theme] ?? "#777"}18`, color: themeColors[session.theme] ?? "#555" }}>

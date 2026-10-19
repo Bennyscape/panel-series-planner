@@ -1,4 +1,6 @@
-import { CalendarDays, CheckCircle2, CircleDashed, Layers3, Plus, ShieldCheck, Sparkles } from "lucide-react";
+"use client";
+
+import { CalendarDays } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { PageHeader } from "@/components/ui/page-header";
 import { StatusBadge } from "@/components/ui/status-badge";

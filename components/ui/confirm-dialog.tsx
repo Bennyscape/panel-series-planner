@@ -1,5 +1,6 @@
+"use client";
+
 import type { ReactNode } from "react";
-import { cn } from "@/lib/utils";
 
 type ConfirmDialogProps = {
   open: boolean;

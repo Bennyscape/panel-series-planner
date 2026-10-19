@@ -16,7 +16,33 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Supabase authentication
+
+Copy `.env.example` to `.env.local` and set the Supabase project URL and
+publishable key. The legacy anon key environment variable is also accepted for
+existing local setups.
+
+Enable email/password authentication and email confirmation in Supabase Auth.
+Add `http://localhost:3000/auth/callback` and the deployed app's matching
+`/auth/callback` URL to the Auth redirect URL allowlist.
+
+To enable Google sign-in:
+
+1. Create a Google OAuth web client in Google Cloud and configure its consent
+   screen and `openid`, email, and profile scopes.
+2. Add the Supabase Auth callback URL shown in the Google provider settings as
+   an authorized redirect URI in Google Cloud.
+3. Enable the Google provider in Supabase Auth and enter the Google client ID
+   and secret.
+4. Add the local and deployed app origins to the Google OAuth authorized
+   JavaScript origins and to the Supabase Auth redirect URL allowlist.
+
+The Google provider must be enabled in the Supabase dashboard for the button to
+complete sign-in. New users receive the `pending` role from the database
+profile trigger.
+
+The Phase 9 migration and first-admin bootstrap SQL are prepared under
+`supabase/`; neither has been applied to the live project.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 

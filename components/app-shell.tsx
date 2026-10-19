@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -7,18 +9,30 @@ import { Suspense } from "react";
 import {
   CalendarDays,
   ChevronRight,
+  Home,
   LayoutDashboard,
   LogOut,
   Mic2,
   NotebookTabs,
+  UsersRound,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { signOut } from "@/lib/actions/auth";
+import type { UserRole } from "@/lib/auth";
 
-const navItems = [
+const adminNavItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/topics", label: "Topics Bank", icon: NotebookTabs },
+  { href: "/topics", label: "Topics", icon: NotebookTabs },
   { href: "/calendar", label: "Calendar", icon: CalendarDays },
-  { href: "/sessions", label: "Sessions List", icon: Mic2 },
+  { href: "/sessions", label: "Sessions", icon: Mic2 },
+  { href: "/members", label: "Members", icon: UsersRound },
+];
+
+const memberNavItems = [
+  { href: "/home", label: "Home", icon: Home },
+  { href: "/calendar", label: "Calendar", icon: CalendarDays },
+  { href: "/topics", label: "Topics", icon: NotebookTabs },
+  { href: "/sessions", label: "Sessions", icon: Mic2 },
 ];
 
 function isActivePath(pathname: string, href: string) {
@@ -29,11 +43,15 @@ function isActivePath(pathname: string, href: string) {
 
 function NavLinks({
   pathname,
+  role,
   mobile = false,
 }: {
   pathname: string;
+  role: UserRole;
   mobile?: boolean;
 }) {
+  const navItems = role === "admin" ? adminNavItems : memberNavItems;
+
   return navItems.map(({ href, label, icon: Icon }) => {
     const active = isActivePath(pathname, href);
     return (
@@ -59,17 +77,44 @@ function NavLinks({
   });
 }
 
-function CurrentNavLinks({ mobile = false }: { mobile?: boolean }) {
+function CurrentNavLinks({
+  role,
+  mobile = false,
+}: {
+  role: UserRole;
+  mobile?: boolean;
+}) {
   const pathname = usePathname();
-  return <NavLinks pathname={pathname} mobile={mobile} />;
+  return <NavLinks pathname={pathname} role={role} mobile={mobile} />;
 }
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join("");
+}
+
+export function AppShell({
+  children,
+  userName,
+  userEmail,
+  role,
+}: {
+  children: React.ReactNode;
+  userName: string;
+  userEmail: string;
+  role: UserRole;
+}) {
+  const homePath = role === "member" ? "/home" : "/dashboard";
+
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--text)]">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-[var(--sidebar-width)] flex-col border-r border-[var(--border)] bg-white lg:flex">
         <Link
-          href="/dashboard"
+          href={homePath}
           className="flex h-[76px] items-center gap-3 border-b border-[var(--border)] px-6"
         >
           <Image
@@ -84,7 +129,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               Series Planner
             </span>
             <span className="mt-0.5 block text-[8px] font-semibold uppercase tracking-[0.16em] text-[var(--muted)]">
-              Coordinator Studio
+              {role === "admin" ? "Coordinator Studio" : "Member Workspace"}
             </span>
           </span>
         </Link>
@@ -93,35 +138,33 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           Curation
         </div>
         <nav aria-label="Main navigation" className="space-y-1 px-2.5">
-          <Suspense fallback={<NavLinks pathname="" />}>
-            <CurrentNavLinks />
+          <Suspense fallback={<NavLinks pathname="" role={role} />}>
+            <CurrentNavLinks role={role} />
           </Suspense>
         </nav>
 
         <div className="mt-auto border-t border-[var(--border)] px-4 py-4">
           <div className="flex items-center gap-2.5">
-            <Image
-              src="/stitch/profile.jpg"
-              alt=""
-              width={32}
-              height={32}
-              className="h-8 w-8 rounded-full object-cover"
-            />
+            <div aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#e5f2ee] text-[9px] font-semibold text-[var(--primary)]">
+              {initials(userName)}
+            </div>
             <div className="min-w-0 flex-1">
               <div className="truncate text-[11px] font-semibold text-[var(--text)]">
-                Elena Rostova
+                {userName}
               </div>
               <div className="truncate text-[9px] text-[var(--muted)]">
-                Series Curator
+                {userEmail}
               </div>
             </div>
-            <button
-              type="button"
-              aria-label="Sign out"
-              className="rounded p-1.5 text-[var(--muted)] hover:bg-[var(--surface)]"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-            </button>
+            <form action={signOut}>
+              <button
+                type="submit"
+                aria-label="Sign out"
+                className="rounded p-1.5 text-[var(--muted)] hover:bg-[var(--surface)]"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+              </button>
+            </form>
           </div>
         </div>
       </aside>
@@ -130,14 +173,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <header className="sticky top-0 z-30 flex h-[var(--topbar-height)] items-center justify-between border-b border-[var(--border)] bg-[var(--background)]/95 px-4 backdrop-blur sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-2 text-[10px]">
             <Link
-              href="/dashboard"
+              href={homePath}
               className="hidden shrink-0 font-semibold uppercase tracking-[0.08em] text-[#77716c] sm:inline"
             >
               Panel Series Studio
             </Link>
             <ChevronRight className="hidden h-3 w-3 shrink-0 text-[#a39c96] sm:block" />
             <span className="truncate font-medium text-[var(--text)]">
-              Young Adult Discourse Cohort
+              {role === "admin" ? "Coordinator Studio" : "Member Workspace"}
             </span>
           </div>
           <div className="flex shrink-0 items-center gap-2.5">
@@ -152,13 +195,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             >
               <NotebookTabs className="h-3.5 w-3.5" />
             </button>
-            <Image
-              src="/stitch/profile.jpg"
-              alt="Elena Rostova"
-              width={28}
-              height={28}
-              className="h-7 w-7 rounded-full object-cover ring-1 ring-white"
-            />
+            <div aria-label={userName} className="flex h-7 w-7 items-center justify-center rounded-full bg-[#e5f2ee] text-[8px] font-semibold text-[var(--primary)] ring-1 ring-white">
+              {initials(userName)}
+            </div>
           </div>
         </header>
 
@@ -169,10 +208,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <nav
         aria-label="Mobile navigation"
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-[var(--border)] bg-white px-1 py-1.5 lg:hidden"
+        className={`fixed inset-x-0 bottom-0 z-30 grid border-t border-[var(--border)] bg-white px-1 py-1.5 lg:hidden ${role === "admin" ? "grid-cols-5" : "grid-cols-4"}`}
       >
-        <Suspense fallback={<NavLinks pathname="" mobile />}>
-          <CurrentNavLinks mobile />
+        <Suspense fallback={<NavLinks pathname="" role={role} mobile />}>
+          <CurrentNavLinks role={role} mobile />
         </Suspense>
       </nav>
     </div>
