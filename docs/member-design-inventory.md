@@ -30,7 +30,7 @@ Existing admin reference screens in the same Stitch project:
 | Waiting for approval | `/waiting` | No screen found |
 | Access restricted | `/restricted` | No screen found |
 | Session detail (view only) | `/sessions/[id]` | No member-specific screen found. The project has the existing admin **Session Detail & Editorial Brief** (`d97c2f70fafe4c0f906b3f21ffe3907a`); it includes notes, editing, and admin-only context, so it is not a member design. |
-| Members management | `/members` | **No Members management screen exists in the Stitch project.** |
+| Members management | `/members` | **Unreferenced:** no Members management screen exists in the Stitch project. |
 
 ## Member-side differences from the existing admin screens
 
